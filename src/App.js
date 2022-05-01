@@ -10,6 +10,7 @@ function App() {
 
   const fetchTours = async () => {
     try {
+      setLoading(true);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('not found');
@@ -23,6 +24,10 @@ function App() {
     }
   };
 
+  const removeTour = (id) => {
+    setTours((prevTours) => prevTours.filter((tour) => tour.id !== id));
+  };
+
   useEffect(() => {
     fetchTours();
   }, []);
@@ -33,9 +38,21 @@ function App() {
       </main>
     );
   }
+  if (tours.length === 0) {
+    return (
+      <main>
+        <div className='title'>
+          <h2>no tours left</h2>
+          <button onClick={fetchTours} className='btn'>
+            refresh
+          </button>
+        </div>
+      </main>
+    );
+  }
   return (
     <main>
-      <Tours tours={tours} />
+      <Tours tours={tours} onRemoveTour={removeTour} />
     </main>
   );
 }
